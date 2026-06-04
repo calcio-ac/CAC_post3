@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>CAC_PIPELINE // Post 03 — Slides</title>
+<link rel="icon" type="image/svg+xml" href="logo.svg" />
+<script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+<style>
+  :root { --teamA:#0277B6; --teamB:#D90429; --box:#09D69F; --bg:#FFD166; --white:#FFFFFF; --black:#000000; }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0;background:#111;color:var(--white);font-family:'Courier New',ui-monospace,monospace}
+  .toolbar{position:sticky;top:0;z-index:50;background:#000;padding:10px 16px;display:flex;gap:10px;flex-wrap:wrap;align-items:center;border-bottom:2px solid var(--box)}
+  .toolbar h1{margin:0;font-size:14px;letter-spacing:1px;flex:1}
+  .toolbar button,.toolbar select{background:var(--box);color:var(--black);border:2px solid var(--black);padding:6px 12px;font-family:inherit;font-size:12px;cursor:pointer;font-weight:bold}
+  .toolbar label{font-size:11px}
+
+  .deck{padding:30px;display:flex;flex-direction:column;gap:30px;align-items:center}
+  .slide-wrap{position:relative;display:inline-block;transform-origin:top center}
+  .slide-wrap .meta-row{display:flex;justify-content:space-between;align-items:center;background:#000;color:var(--white);padding:6px 10px;font-size:12px;border:2px solid var(--box)}
+  .slide-wrap .meta-row button{background:var(--box);color:var(--black);border:1px solid var(--black);padding:4px 10px;cursor:pointer;font-family:inherit;font-weight:bold;font-size:11px}
+
+  .slide{width:1080px;height:1350px;background:var(--bg);color:var(--black);position:relative;overflow:hidden;padding:80px;border:4px solid var(--black)}
+  .slide .corner-tl{position:absolute;top:30px;left:30px;display:flex;gap:10px;align-items:center}
+  .slide .corner-tl img{height:56px}
+  .slide .corner-tl .tag{background:var(--black);color:var(--bg);padding:4px 10px;font-size:14px;letter-spacing:1px}
+  .slide .corner-tr{position:absolute;top:30px;right:30px;text-align:right;font-size:14px;letter-spacing:1px}
+  .slide .corner-bl{position:absolute;bottom:30px;left:30px;font-size:14px;letter-spacing:1px}
+  .slide .swipe{position:absolute;bottom:30px;left:50%;transform:translateX(-50%);background:var(--black);color:var(--bg);padding:8px 18px;font-size:16px;letter-spacing:2px}
+
+  .slide h2{font-size:64px;line-height:1.05;margin:0 0 24px;letter-spacing:1px;text-transform:uppercase}
+  .slide h3{font-size:36px;line-height:1.1;margin:0 0 16px;letter-spacing:1px;text-transform:uppercase}
+  .slide p{font-size:26px;line-height:1.35;margin:0 0 18px}
+  .slide .tiny{font-size:18px;opacity:.8}
+  .big-num{font-size:260px;line-height:.9;font-weight:bold;letter-spacing:-4px;white-space:nowrap}
+  .big-num.red{color:var(--teamB)} .big-num.blue{color:var(--teamA)} .big-num.green{color:#056b3a}
+
+  .box{background:var(--box);border:4px solid var(--black);padding:24px 28px}
+  .box.red{background:var(--teamB);color:var(--white)} .box.blue{background:var(--teamA);color:var(--white)} .box.white{background:var(--white)}
+
+  table.t{width:100%;border-collapse:collapse;font-size:24px;background:var(--white);border:4px solid var(--black);table-layout:fixed}
+  table.t th{background:var(--black);color:var(--bg);padding:14px 16px;text-align:left;font-size:18px;letter-spacing:1px}
+  table.t th.r{text-align:right}
+  table.t td{padding:14px 16px;border-bottom:2px dashed var(--black)}
+  table.t tr:last-child td{border-bottom:0}
+  table.t td.r{text-align:right;font-weight:bold}
+
+  .bar-row{display:flex;align-items:center;gap:12px;margin:14px 0;font-size:22px}
+  .bar-row .lbl{width:230px;text-align:right;font-weight:bold}
+  .bar-row .bar{height:44px;background:var(--white);border:3px solid var(--black);position:relative;flex:1}
+  .bar-row .fill{height:100%}
+  .bar-row .val{position:absolute;right:8px;top:8px;font-weight:bold;font-size:20px}
+
+  .methbox{background:var(--white);border:3px solid var(--black);padding:18px 22px;font-size:18px;line-height:1.5;margin-top:18px}
+  .methbox b{font-size:20px}
+  .center{display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;text-align:center;gap:20px}
+</style>
+</head>
+<body>
+
+<div class="toolbar">
+  <h1>CAC_PIPELINE // POST 03 — SLIDES (1080×1350)</h1>
+  <label>VIEW</label>
+  <select id="scaleSel">
+    <option value="0.35">35%</option><option value="0.5" selected>50%</option>
+    <option value="0.75">75%</option><option value="1">100%</option>
+  </select>
+  <label>EXPORT</label>
+  <select id="dpiSel">
+    <option value="2" selected>2x HD</option><option value="3">3x ULTRA</option><option value="1">1x</option>
+  </select>
+  <button id="dlAll">⬇ DOWNLOAD ALL</button>
+</div>
+
+<div class="deck" id="deck"></div>
+
+<script>
+const COL = { teamA:'#0277B6', teamB:'#D90429', box:'#09D69F', bg:'#FFD166', white:'#FFFFFF', black:'#000000' };
+let D = null;
+
+async function load(){
+  D = await (await fetch('../data/data.json')).json();
+  render();
+  document.getElementById('scaleSel').addEventListener('change', applyScale);
+  document.getElementById('dlAll').addEventListener('click', downloadAll);
+  applyScale();
+}
+function applyScale(){
+  const s = parseFloat(document.getElementById('scaleSel').value);
+  document.querySelectorAll('.slide-wrap').forEach(w => {
+    w.style.transform = `scale(${s})`;
+    w.style.marginBottom = `${(1350 + 50) * (s - 1)}px`;
+  });
+}
+function shell(n, total, body){
+  return `<div class="slide-wrap">
+    <div class="meta-row">
+      <span>SLIDE ${n} / ${total} — 1080×1350</span>
+      <button onclick="downloadOne(${n})">⬇ DOWNLOAD HD</button>
+    </div>
+    <div class="slide" id="slide-${n}">
+      <div class="corner-tl"><img src="logo.svg" alt="CAC"/><span class="tag">POST_03</span></div>
+      <div class="corner-tr">CALCIOAC.COM</div>
+      ${body}
+    </div>
+  </div>`;
+}
+function bar(lbl, val, max, color, suffix=''){
+  const pct = Math.min(100, (val/max)*100);
+  return `<div class="bar-row"><div class="lbl">${lbl}</div>
+    <div class="bar"><div class="fill" style="width:${pct}%;background:${color}"></div><span class="val">${val}${suffix}</span></div></div>`;
+}
+
+function render(){
+  const TC = Object.entries(D.top_clubs).slice(0,10);
+  const TL = Object.entries(D.top_leagues).filter(([k])=>k!=='Unmapped').slice(0,10);
+  const big5 = ['England','Spain','Italy','Germany','France'].reduce((s,c)=>s+(D.top_leagues[c]||0),0);
+  const big5Pct = (big5/D.meta.total_players*100).toFixed(1);
+  const saudiN = D.top_leagues['Saudi Arabia'] || 0;
+  const totalP = D.meta.total_players;
+
+  // Continent breakdown for slide 4
+  const contOrder = ['Europe','Asia','North America','South America','Africa','Oceania'];
+  const contStats = contOrder.map(c => [c, D.by_continent[c]||0, ((D.by_continent[c]||0)/totalP*100).toFixed(1)]);
+
+  // Home vs abroad — pick interesting extremes
+  const hp = Object.entries(D.home_pct);
+  const homeTop = hp.sort((a,b)=>b[1]-a[1]).slice(0,5);
+  const homeBot = hp.sort((a,b)=>a[1]-b[1]).slice(0,5);
+
+  const TOTAL = 9;
+  const slides = [];
+
+  // 1 COVER
+  slides.push(shell(1, TOTAL, `
+    <div class="center">
+      <h2 style="font-size:80px;">WHERE THE</h2>
+      <h2 style="font-size:120px; color:var(--teamB);">WORLD CUP</h2>
+      <h2 style="font-size:80px;">ACTUALLY LIVES.</h2>
+      <p style="font-size:28px; margin-top:30px;">${totalP} players. 48 nations. 5 leagues run the show.</p>
+      <div class="box" style="margin-top:30px;"><b style="font-size:28px;">CAC_PIPELINE // POST 03</b></div>
+    </div>
+    <div class="swipe">SWIPE →</div>
+  `));
+
+  // 2 TOP 5 CLUBS
+  slides.push(shell(2, TOTAL, `
+    <h2>5 CLUBS RUN THE WORLD</h2>
+    <p>Top clubs by players sent to WC 2026:</p>
+    <div style="margin-top:30px;">
+      ${TC.slice(0,10).map(([c,v]) => bar(c, v, 22,
+         ['Manchester City','Arsenal','Liverpool','Manchester United','Crystal Palace','Aston Villa','Chelsea'].includes(c) ? COL.teamA :
+         c==='Barcelona' ? '#A50044' : c==='Bayern Munich' ? '#DC052D' : c==='Paris Saint-Germain' ? '#004170' :
+         COL.box
+      )).join('')}
+    </div>
+    <p class="tiny" style="margin-top:20px;">Top 10 clubs supply <b>${TC.slice(0,10).reduce((s,e)=>s+e[1],0)}</b> of ${totalP} players (${(TC.slice(0,10).reduce((s,e)=>s+e[1],0)/totalP*100).toFixed(1)}%).</p>
+  `));
+
+  // 3 TOP 5 LEAGUES + BIG-5 STAT
+  slides.push(shell(3, TOTAL, `
+    <h2>5 LEAGUES, HALF THE WORLD CUP</h2>
+    <p>The Big-5 European leagues alone account for ${big5Pct}% of all WC 2026 players.</p>
+    <div style="margin-top:30px;">
+      ${TL.slice(0,10).map(([c,v]) =>
+        bar(c, v, Math.max(...TL.map(e=>e[1])),
+          ['England','Spain','Italy','Germany','France'].includes(c) ? COL.teamA :
+          c==='Saudi Arabia' ? COL.teamB : COL.box)
+      ).join('')}
+    </div>
+    <div class="box red" style="margin-top:20px;"><b style="font-size:28px;">SAUDI PRO LEAGUE: ${saudiN} PLAYERS — 6TH-BIGGEST SUPPLIER</b></div>
+  `));
+
+  // 4 BY CONTINENT
+  slides.push(shell(4, TOTAL, `
+    <h2>BY CONTINENT</h2>
+    <p>Where every WC 2026 player's club is based.</p>
+    <table class="t" style="margin-top:30px;">
+      <thead><tr><th>CONTINENT</th><th class="r">PLAYERS</th><th class="r">SHARE</th><th>TOP CLUB</th></tr></thead>
+      <tbody>
+        ${contStats.map(([c,v,p]) => {
+          const top = Object.entries(D.top_club_per_continent[c] || {})[0] || ['—',0];
+          return `<tr><td><b>${c}</b></td><td class="r">${v}</td><td class="r">${p}%</td><td>${top[0]} (${top[1]})</td></tr>`;
+        }).join('')}
+      </tbody>
+    </table>
+    <div class="box blue" style="margin-top:24px;"><b style="font-size:26px;">${((D.by_continent.Europe||0)/totalP*100).toFixed(0)}% OF EVERY WC 2026 ROSTER PLAYS ITS CLUB FOOTBALL IN EUROPE.</b></div>
+  `));
+
+  // 5 THE SAUDI STORY
+  const saudiTop = Object.entries(D.top_club_per_continent['Asia'] || {}).filter(([c]) => ['Al Hilal','Al Nassr','Al Ahli','Al Ittihad','Al Qadsiah'].includes(c)).slice(0,5);
+  slides.push(shell(5, TOTAL, `
+    <h2>THE SAUDI PROJECT, MEASURED IN ROSTER SPOTS</h2>
+    <p>Saudi Pro League sends more players to WC 2026 than the entire MLS, Eredivisie, Liga MX, or Brasileirão.</p>
+    <table class="t" style="margin-top:30px;">
+      <thead><tr><th>CLUB</th><th class="r">PLAYERS</th></tr></thead>
+      <tbody>
+        ${[['Al Hilal',11],['Al Nassr',10],['Al Ahli', D.top_clubs['Al Ahli']||0],['Al Ittihad', D.top_clubs['Al Ittihad']||0],['Al Qadsiah', D.top_clubs['Al Qadsiah']||0]].map(([c,v]) => `<tr><td><b>${c}</b></td><td class="r">${v}</td></tr>`).join('')}
+      </tbody>
+    </table>
+    <div class="box red" style="margin-top:30px;">
+      <p style="font-size:28px; margin:0;"><b>${saudiN} TOTAL SAUDI-BASED PLAYERS</b><br>
+      <span style="font-size:22px;">More than USA (${D.top_leagues.USA||0}) · Turkey (${D.top_leagues.Turkey||0}) · Brazil (${D.top_leagues.Brazil||0}) · Mexico (${D.top_leagues.Mexico||0})</span></p>
+    </div>
+  `));
+
+  // 6 HOME vs ABROAD
+  slides.push(shell(6, TOTAL, `
+    <h2>HOME VS ABROAD</h2>
+    <p>% of each national team that plays its club football inside its own country.</p>
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:24px; margin-top:30px;">
+      <div class="box white">
+        <h3 style="margin:0 0 12px; font-size:24px;">MOST HOME-BASED</h3>
+        ${homeTop.map(([n,v]) => `<div style="display:flex; justify-content:space-between; padding:6px 0; font-size:22px;"><b>${n}</b><span style="color:var(--teamA)">${v.toFixed(0)}%</span></div>`).join('')}
+      </div>
+      <div class="box white">
+        <h3 style="margin:0 0 12px; font-size:24px;">MOST FOREIGN-BASED</h3>
+        ${homeBot.map(([n,v]) => `<div style="display:flex; justify-content:space-between; padding:6px 0; font-size:22px;"><b>${n}</b><span style="color:var(--teamB)">${v.toFixed(0)}%</span></div>`).join('')}
+      </div>
+    </div>
+    <div class="box" style="margin-top:24px;">
+      <p style="font-size:26px; margin:0;"><b>Netherlands brings 26 players. ${(D.home_pct['Netherlands']||0).toFixed(0)}% play in the Eredivisie.<br>Senegal brings 26. ${(D.home_pct['Senegal']||0).toFixed(0)}% play in Senegal.</b></p>
+    </div>
+  `));
+
+  // 7 WHERE EXPORTERS PLAY
+  const exporters = [
+    ['Morocco',     D.nation_breakdown['Morocco']],
+    ['Senegal',     D.nation_breakdown['Senegal']],
+    ['Croatia',     D.nation_breakdown['Croatia']],
+    ['Switzerland', D.nation_breakdown['Switzerland']],
+    ['Algeria',     D.nation_breakdown['Algeria']],
+  ];
+  slides.push(shell(7, TOTAL, `
+    <h2>WHERE EXPORTERS PLAY</h2>
+    <p>Top 3 leagues each "exporter" nation sends its players to:</p>
+    <table class="t" style="margin-top:30px; font-size:22px;">
+      <thead><tr><th>NATION</th><th>1ST</th><th>2ND</th><th>3RD</th></tr></thead>
+      <tbody>
+        ${exporters.map(([n,bd]) => {
+          const arr = Object.entries(bd||{}).filter(([k])=>k!=='Unmapped').slice(0,3);
+          return `<tr><td><b>${n}</b></td>${[0,1,2].map(i => {
+            const a = arr[i]; return `<td>${a? a[0]+' ('+a[1]+')' : '—'}</td>`;
+          }).join('')}</tr>`;
+        }).join('')}
+      </tbody>
+    </table>
+    <p class="tiny" style="margin-top:24px;"><b>Morocco's pipeline still flows through Ligue 1. Senegal's ends in the Premier League.</b></p>
+  `));
+
+  // 8 METHODOLOGY / THE LOAN INFLATION
+  slides.push(shell(8, TOTAL, `
+    <h2>HOW WE COUNT</h2>
+    <p>Why the official Barça press release says <b>16</b> and our data says <b>14</b>.</p>
+    <table class="t" style="margin-top:24px; font-size:22px;">
+      <thead><tr><th>PLAYER</th><th>BARÇA COUNTS THEM</th><th>WE COUNT THEM AT</th></tr></thead>
+      <tbody>
+        <tr><td><b>Hamza Abdelkarim</b></td><td>Barcelona</td><td>Barcelona (B-team merged)</td></tr>
+        <tr><td><b>Marcus Rashford</b></td><td>Barcelona (on loan)</td><td>Manchester United</td></tr>
+        <tr><td><b>Anthony Gordon</b></td><td>Barcelona (on loan)</td><td>Newcastle United</td></tr>
+      </tbody>
+    </table>
+    <div class="methbox">
+      <b>METHODOLOGY</b><br>
+      Loanees are credited to their <b>parent club</b>, not their loan club. This is the same rule FIFA uses on the official squad list — every Man City, Real Madrid, and Chelsea count in this dataset follows it too.<br><br>
+      <b>Reserves</b> (e.g. Barcelona B) are merged into the senior team.<br><br>
+      <b>Source</b>: FBref / FIFA roster · ${D.meta.mapped_pct}% of players mapped to a club country · 48 nations · ${totalP} players.
+    </div>
+  `));
+
+  // 9 CTA
+  slides.push(shell(9, TOTAL, `
+    <div class="center">
+      <h2 style="font-size:60px;">DRAG THE FILTERS.</h2>
+      <h2 style="font-size:60px; color:var(--teamB);">FIND YOUR COUNTRY.</h2>
+      <p style="font-size:30px; margin-top:24px;">Pick any of the 48 nations →<br>see where its players actually play.</p>
+      <div class="box" style="margin-top:30px; font-size:28px;"><b>CALCIO-AC.GITHUB.IO/CAC_POST3</b></div>
+      <p style="font-size:24px; margin-top:30px;">link in bio · CALCIOAC.COM</p>
+    </div>
+    <div class="corner-bl">FOLLOW @CALCIO.AC</div>
+  `));
+
+  document.getElementById('deck').innerHTML = slides.join('');
+}
+
+async function downloadOne(n){
+  const node = document.getElementById('slide-'+n);
+  const dpi = parseFloat(document.getElementById('dpiSel').value);
+  const wrap = node.closest('.slide-wrap');
+  const pt = wrap.style.transform, pm = wrap.style.marginBottom;
+  wrap.style.transform = 'none'; wrap.style.marginBottom = '';
+  const canvas = await html2canvas(node, { scale: dpi, backgroundColor: COL.bg, useCORS:true, logging:false,
+    width:1080, height:1350, windowWidth:1080, windowHeight:1350 });
+  wrap.style.transform = pt; wrap.style.marginBottom = pm;
+  const a = document.createElement('a');
+  a.download = `CAC_post03_slide${String(n).padStart(2,'0')}_${dpi}x.png`;
+  a.href = canvas.toDataURL('image/png'); a.click();
+}
+async function downloadAll(){
+  const btn = document.getElementById('dlAll'); btn.disabled = true; const orig = btn.textContent;
+  for (let n=1; n<=9; n++) { btn.textContent = `EXPORTING ${n}/9…`; await downloadOne(n); await new Promise(r=>setTimeout(r,300)); }
+  btn.disabled = false; btn.textContent = orig;
+}
+load();
+</script>
+</body>
+</html>

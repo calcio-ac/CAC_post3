@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>CAC_PIPELINE // Post 03 — Where the WC Lives</title>
+<link rel="icon" type="image/svg+xml" href="logo.svg" />
+<script src="https://cdn.plot.ly/plotly-2.35.2.min.js"></script>
+<style>
+  :root {
+    --teamA: #0277B6; --teamB: #D90429; --box: #09D69F;
+    --bg: #FFD166; --white: #FFFFFF; --black: #000000;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; background: var(--bg); color: var(--black);
+               font-family: 'Courier New', ui-monospace, monospace; }
+  .wrap { max-width: 1200px; margin: 0 auto; padding: 24px; }
+  header { border: 3px solid var(--black); padding: 16px 20px; background: var(--white);
+           display:flex; gap:16px; align-items:center; }
+  header .brand { flex-shrink:0; }
+  header .brand img { height: 48px; }
+  header .meta { flex:1; min-width:0; }
+  header h1 { margin: 0; font-size: 22px; letter-spacing: 1px; }
+  header p  { margin: 6px 0 0; font-size: 13px; }
+  .tag { display:inline-block; background: var(--black); color: var(--bg); padding: 2px 8px; margin-right:6px; font-size: 11px; text-decoration:none; }
+  .tag.link { background: var(--teamA); }
+  .tag.red  { background: var(--teamB); }
+
+  .grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-top: 18px; }
+  .stat { background: var(--box); border: 3px solid var(--black); padding: 12px; }
+  .stat .n { font-size: 26px; font-weight: bold; line-height: 1; }
+  .stat .l { font-size: 10px; text-transform: uppercase; margin-top:4px; }
+  .stat.blue { background: var(--teamA); color: var(--white); }
+  .stat.red  { background: var(--teamB); color: var(--white); }
+
+  .panel { background: var(--white); border: 3px solid var(--black); margin-top: 18px; padding: 14px; }
+  .panel h2 { margin: 0 0 8px; font-size: 14px; letter-spacing: 1px; }
+  .panel p.small { font-size: 12px; margin: 0 0 8px; }
+  .panel .controls { display:flex; gap:12px; flex-wrap:wrap; align-items:center; margin: 0 0 12px; font-size:12px; }
+  .panel select, .panel input[type=range] { font-family: inherit; border:2px solid var(--black); padding:4px 8px; background:var(--white); }
+
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 18px; }
+  table { width: 100%; border-collapse: collapse; font-size: 12px; }
+  th, td { border-bottom: 1px dashed var(--black); padding: 6px 6px; text-align: left; }
+  th { background: var(--black); color: var(--bg); }
+  th.r, td.r { text-align:right; }
+
+  .methodology { background: #fff8e0; border: 2px solid var(--black); padding: 12px; margin-top: 12px; font-size: 11px; line-height:1.5; }
+  .methodology b { font-size:12px; }
+
+  footer { font-size: 11px; text-align:center; margin: 24px 0 8px; }
+  footer a { color: var(--black); }
+  @media (max-width: 720px){
+    .grid { grid-template-columns: repeat(2, 1fr); }
+    .two-col { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <a class="brand" href="https://calcioac.com" target="_blank" rel="noopener" aria-label="Calcio AC">
+      <img src="logo.svg" alt="Calcio AC logo" />
+    </a>
+    <div class="meta">
+      <a class="tag link" href="https://calcioac.com" target="_blank" rel="noopener">CALCIOAC.COM</a><span class="tag">POST_03</span><a class="tag red" href="slides.html">SLIDES →</a>
+      <h1>WHERE THE WORLD CUP ACTUALLY LIVES</h1>
+      <p>Every WC 2026 squad, mapped to its club + league + continent. Pick a country to see where its players play.</p>
+    </div>
+  </header>
+
+  <div class="grid" id="kpis"></div>
+
+  <div class="panel">
+    <h2>&gt; TOP CLUBS // BY PLAYERS SENT TO WC 2026</h2>
+    <div class="controls">
+      <label>SHOW TOP</label>
+      <select id="topNClubs">
+        <option value="10">10</option><option value="20" selected>20</option><option value="30">30</option>
+      </select>
+      <label>CONTINENT FILTER</label>
+      <select id="contClubs">
+        <option value="ALL">All</option><option>Europe</option><option>Asia</option>
+        <option>North America</option><option>South America</option><option>Africa</option><option>Oceania</option>
+      </select>
+    </div>
+    <div id="chart-clubs" style="width:100%; height:520px;"></div>
+  </div>
+
+  <div class="two-col">
+    <div class="panel">
+      <h2>&gt; TOP LEAGUES // BY PLAYERS SUPPLIED</h2>
+      <div id="chart-leagues" style="width:100%; height:400px;"></div>
+    </div>
+    <div class="panel">
+      <h2>&gt; BY CONTINENT // OF CLUB</h2>
+      <div id="chart-continents" style="width:100%; height:400px;"></div>
+    </div>
+  </div>
+
+  <div class="panel">
+    <h2>&gt; PICK A COUNTRY // WHERE DOES EACH NATIONAL TEAM ACTUALLY PLAY?</h2>
+    <div class="controls">
+      <label>NATIONAL TEAM</label>
+      <select id="natSel"></select>
+    </div>
+    <div id="chart-nat" style="width:100%; height:380px;"></div>
+    <p class="small" id="natCaption" style="margin-top:8px;"></p>
+  </div>
+
+  <div class="panel">
+    <h2>&gt; HOME vs ABROAD // % OF SQUAD PLAYING IN OWN DOMESTIC LEAGUE</h2>
+    <p class="small">Sorted by % of the national team that plays its club football inside its own country.</p>
+    <div id="chart-home" style="width:100%; height:600px;"></div>
+  </div>
+
+  <div class="panel">
+    <h2>&gt; PICK A CLUB // WHO PLAYS FOR THEM AT THE WC?</h2>
+    <div class="controls">
+      <label>CLUB</label>
+      <select id="clubSel"></select>
+    </div>
+    <table id="clubTbl">
+      <thead><tr><th>NATIONAL TEAM</th><th class="r">PLAYERS</th></tr></thead>
+      <tbody></tbody>
+    </table>
+  </div>
+
+  <div class="methodology">
+    <b>METHODOLOGY</b><br>
+    • <b>Sample</b>: <span id="metaTotal"></span> players across <span id="metaNations"></span> WC 2026 squads.<br>
+    • <b>Club attribution</b>: each player is credited to their <i>parent</i> club at squad announcement. Loanees are credited to the parent club (e.g. Marcus Rashford → Manchester United, not Barcelona). This is the same rule FIFA uses on the official roster.<br>
+    • <b>Reserves merged</b>: B-teams / reserve sides count toward their senior team (e.g. <i>Barcelona B</i> → Barcelona). This is why Barcelona's count includes Hamza Abdelkarim.<br>
+    • <b>League = club country</b>: a league here means the country its club is based in, not a specific division. England covers Premier League + EFL combined.<br>
+    • <b>Continent = club continent</b>, not the national team's continent. A Senegalese player at Arsenal counts toward Europe.<br>
+    • <b>Mapping coverage</b>: <span id="metaMapped"></span>% of players are mapped to a club country. The remainder (mostly obscure spelling variants) are tagged "Unmapped" and excluded from league/continent counts but still appear in club totals.<br>
+    • <b>Source</b>: FBref / FIFA roster + manual cleanup.<br>
+    • <b>Where the official Barça press release says 16</b> blaugranes, this dataset shows 14: the difference is Rashford (counted at Man Utd) and Anthony Gordon (counted at Newcastle).
+  </div>
+
+  <footer><a href="https://calcioac.com" target="_blank" rel="noopener">CAC // calcioac.com</a> // post 03 — where the WC actually lives</footer>
+</div>
+
+<script>
+const COL = { teamA:'#0277B6', teamB:'#D90429', box:'#09D69F', bg:'#FFD166', white:'#FFFFFF', black:'#000000' };
+const FONT = "'Courier New', monospace";
+const ORDER_CONT = ['Europe','Asia','North America','South America','Africa','Oceania'];
+const CONT_COLOR = { 'Europe':COL.teamA, 'Asia':COL.teamB, 'North America':'#FF8C00',
+                     'South America':'#056b3a', 'Africa':COL.box, 'Oceania':'#7B2CBF', 'Unmapped':'#888' };
+let D = null;
+
+async function load(){
+  D = await (await fetch('../data/data.json')).json();
+  document.getElementById('metaTotal').textContent = D.meta.total_players;
+  document.getElementById('metaNations').textContent = D.meta.total_nations;
+  document.getElementById('metaMapped').textContent = D.meta.mapped_pct;
+  buildKPIs(); populateSelects(); bindUI(); renderAll();
+}
+
+function buildKPIs(){
+  const topClub = Object.entries(D.top_clubs)[0];
+  const big5 = ['England','Spain','Italy','Germany','France'].reduce((s,c)=>s+(D.top_leagues[c]||0),0);
+  const big5Pct = (big5 / D.meta.total_players * 100).toFixed(1);
+  const saudi = D.top_leagues['Saudi Arabia'] || 0;
+  const europePct = ((D.by_continent['Europe']||0) / D.meta.total_players * 100).toFixed(1);
+  const kpis = [
+    {n:`${topClub[1]}`, l:`TOP CLUB: ${topClub[0]}`, cls:'stat'},
+    {n:`${big5Pct}%`,   l:'BIG-5 LEAGUE SHARE',     cls:'stat blue'},
+    {n:`${saudi}`,      l:'SAUDI PRO LEAGUE (6TH)', cls:'stat red'},
+    {n:`${europePct}%`, l:'PLAY IN EUROPE',         cls:'stat'},
+  ];
+  document.getElementById('kpis').innerHTML = kpis.map(k =>
+    `<div class="${k.cls}"><div class="n">${k.n}</div><div class="l">${k.l}</div></div>`).join('');
+}
+
+function populateSelects(){
+  const nats = Object.keys(D.nation_breakdown).sort();
+  document.getElementById('natSel').innerHTML = nats.map(n => `<option>${n}</option>`).join('');
+  const clubs = Object.keys(D.top_clubs).slice(0, 30);
+  document.getElementById('clubSel').innerHTML = clubs.map(c => `<option>${c}</option>`).join('');
+}
+
+function bindUI(){
+  ['topNClubs','contClubs'].forEach(id => document.getElementById(id).addEventListener('change', renderClubs));
+  document.getElementById('natSel').addEventListener('change', renderNation);
+  document.getElementById('clubSel').addEventListener('change', renderClub);
+}
+
+function renderAll(){ renderClubs(); renderLeagues(); renderContinents(); renderNation(); renderHome(); renderClub(); }
+
+function clubContinent(club){
+  for (const p of D.players) if (p.Club === club) return p.Continent || 'Unmapped';
+  return 'Unmapped';
+}
+
+function renderClubs(){
+  const n = parseInt(document.getElementById('topNClubs').value);
+  const cont = document.getElementById('contClubs').value;
+  let entries = Object.entries(D.top_clubs);
+  if (cont !== 'ALL') entries = entries.filter(([c]) => clubContinent(c) === cont);
+  entries = entries.slice(0, n).reverse();
+  const colors = entries.map(([c]) => CONT_COLOR[clubContinent(c)] || COL.black);
+  Plotly.newPlot('chart-clubs', [{
+    type:'bar', orientation:'h',
+    x: entries.map(e=>e[1]), y: entries.map(e=>e[0]),
+    marker:{ color: colors, line:{ color: COL.black, width:1.5 } },
+    text: entries.map(e=>e[1]), textposition:'outside',
+    hovertemplate:'<b>%{y}</b><br>Players: %{x}<extra></extra>'
+  }], {
+    paper_bgcolor: COL.white, plot_bgcolor: COL.white,
+    font:{ family: FONT, color: COL.black, size: 12 },
+    margin:{ l:160, r:40, t:10, b:40 },
+    xaxis:{ title:'PLAYERS AT WC 2026', gridcolor:'#eee' },
+    yaxis:{ automargin:true }
+  }, {displayModeBar:false, responsive:true});
+}
+
+function renderLeagues(){
+  const entries = Object.entries(D.top_leagues).filter(([k])=>k!=='Unmapped').slice(0,15).reverse();
+  Plotly.newPlot('chart-leagues', [{
+    type:'bar', orientation:'h',
+    x: entries.map(e=>e[1]), y: entries.map(e=>e[0]),
+    marker:{ color: entries.map(([c,v]) => ['England','Spain','Italy','Germany','France'].includes(c) ? COL.teamA : COL.box),
+             line:{ color: COL.black, width:1.5 } },
+    text: entries.map(e=>e[1]), textposition:'outside',
+    hovertemplate:'<b>%{y}</b><br>Players: %{x}<extra></extra>'
+  }], {
+    paper_bgcolor: COL.white, plot_bgcolor: COL.white,
+    font:{ family: FONT, color: COL.black, size: 12 },
+    margin:{ l:120, r:40, t:10, b:40 },
+    xaxis:{ gridcolor:'#eee' }, yaxis:{ automargin:true }
+  }, {displayModeBar:false, responsive:true});
+}
+
+function renderContinents(){
+  const entries = ORDER_CONT.map(c => [c, D.by_continent[c] || 0]);
+  Plotly.newPlot('chart-continents', [{
+    type:'pie', labels: entries.map(e=>e[0]), values: entries.map(e=>e[1]),
+    marker:{ colors: entries.map(e=>CONT_COLOR[e[0]]), line:{ color: COL.black, width:2 } },
+    textinfo:'label+percent', textfont:{ family: FONT, color: COL.black, size: 13 },
+    hovertemplate:'<b>%{label}</b><br>%{value} players<br>%{percent}<extra></extra>'
+  }], {
+    paper_bgcolor: COL.white, plot_bgcolor: COL.white,
+    font:{ family: FONT, color: COL.black },
+    margin:{ l:10, r:10, t:10, b:10 }, showlegend:false
+  }, {displayModeBar:false, responsive:true});
+}
+
+function renderNation(){
+  const nat = document.getElementById('natSel').value;
+  const b = D.nation_breakdown[nat];
+  const entries = Object.entries(b).sort((a,b)=>b[1]-a[1]);
+  Plotly.newPlot('chart-nat', [{
+    type:'bar', orientation:'h',
+    x: entries.map(e=>e[1]).reverse(), y: entries.map(e=>e[0]).reverse(),
+    marker:{ color: COL.teamA, line:{ color: COL.black, width:1.5 } },
+    text: entries.map(e=>e[1]).reverse(), textposition:'outside',
+    hovertemplate:'<b>%{y}</b><br>%{x} players<extra></extra>'
+  }], {
+    paper_bgcolor: COL.white, plot_bgcolor: COL.white,
+    font:{ family: FONT, color: COL.black, size: 12 },
+    margin:{ l:130, r:40, t:10, b:30 },
+    xaxis:{ gridcolor:'#eee' }, yaxis:{ automargin:true }
+  }, {displayModeBar:false, responsive:true});
+  const home = D.home_pct[nat];
+  const total = entries.reduce((s,e)=>s+e[1], 0);
+  document.getElementById('natCaption').innerHTML =
+    `<b>${nat}</b>: ${total} players · ${home}% play in their own domestic league · ${entries.length} different leagues represented`;
+}
+
+function renderHome(){
+  const entries = Object.entries(D.home_pct).sort((a,b)=>b[1]-a[1]);
+  Plotly.newPlot('chart-home', [{
+    type:'bar', orientation:'h',
+    x: entries.map(e=>e[1]).reverse(), y: entries.map(e=>e[0]).reverse(),
+    marker:{ color: entries.map(e => e[1] >= 50 ? COL.teamA : e[1] >= 20 ? COL.box : COL.teamB).reverse(),
+             line:{ color: COL.black, width:1 } },
+    text: entries.map(e=>e[1].toFixed(0)+'%').reverse(), textposition:'outside',
+    hovertemplate:'<b>%{y}</b><br>%{x:.1f}% home-based<extra></extra>'
+  }], {
+    paper_bgcolor: COL.white, plot_bgcolor: COL.white,
+    font:{ family: FONT, color: COL.black, size: 11 },
+    margin:{ l:140, r:60, t:10, b:30 },
+    xaxis:{ ticksuffix:'%', gridcolor:'#eee' }, yaxis:{ automargin:true }
+  }, {displayModeBar:false, responsive:true});
+}
+
+function renderClub(){
+  const cl = document.getElementById('clubSel').value;
+  const b = D.club_breakdown[cl] || {};
+  const entries = Object.entries(b).sort((a,b)=>b[1]-a[1]);
+  const tb = document.querySelector('#clubTbl tbody');
+  tb.innerHTML = entries.length
+    ? entries.map(e => `<tr><td><b>${e[0]}</b></td><td class="r">${e[1]}</td></tr>`).join('')
+    : `<tr><td colspan="2">— no data —</td></tr>`;
+}
+
+load();
+</script>
+</body>
+</html>
