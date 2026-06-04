@@ -143,34 +143,43 @@ function render(){
     <div class="swipe">SWIPE →</div>
   `));
 
-  // 2 TOP 5 CLUBS — proper club colors so each bar reads as its own club
-  const CLUB_COLOR = {
-    'Manchester City'    : '#6CABDD',  // sky blue
-    'Bayern Munich'      : '#DC052D',  // red
-    'Paris Saint-Germain': '#004170',  // navy
-    'Arsenal'            : '#EF0107',  // gunner red
-    'Barcelona'          : '#A50044',  // maroon
-    'Atlético Madrid'    : '#CE3524',  // red
-    'Borussia Dortmund'  : '#000000',  // black (yellow on yellow bg = invisible)
-    'Liverpool'          : '#C8102E',  // red
-    'Manchester United'  : '#DA291C',  // red
-    'Al Hilal'           : '#0033A0',  // royal blue — the outlier
-    'Galatasaray'        : '#FFA500',  // orange-yellow
-    'Real Madrid'        : '#00529F',  // royal blue
-    'AC Milan'           : '#FB090B',  // rosso milan
-    'Slavia Prague'      : '#8B0000',  // dark red
-    'Aston Villa'        : '#670E36',  // claret
-    'Chelsea'            : '#034694',  // royal blue
-    'Crystal Palace'     : '#1B458F',  // blue
-    'Al Nassr'           : '#FFCB02',  // gold
+  // 2 TOP 5 CLUBS — colored by LEAGUE (so each league reads as a single bloc)
+  const LEAGUE_COLOR = {
+    'England'      : '#0277B6',  // CAC blue
+    'Germany'      : '#000000',  // black
+    'France'       : '#004170',  // navy
+    'Spain'        : '#D90429',  // CAC red
+    'Italy'        : '#056b3a',  // green
+    'Saudi Arabia' : '#FFA500',  // gold/orange — the outlier
+    'Turkey'       : '#800020',  // burgundy
+    'Netherlands'  : '#FF6B00',  // dutch orange
+    'Portugal'     : '#046A38',  // portuguese green
+    'USA'          : '#7B2CBF',  // distinct purple
+    'Brazil'       : '#FEDD00',  // yellow (won't show on yellow bg — fallback)
+    'Mexico'       : '#006847',  // mex green
+    'Czechia'      : '#11457E',  // czech blue
+    'Belgium'      : '#FAE042',  // belgian yellow
   };
+  function leagueOf(club){
+    for (const p of D.players) if (p.Club === club) return p.ClubCountry || '';
+    return '';
+  }
+  // Build a legend for only the leagues present in the top 10
+  const top10Leagues = [...new Set(TC.slice(0,10).map(([c]) => leagueOf(c)))].filter(Boolean);
+  const legend = top10Leagues.map(l =>
+    `<span style="display:inline-flex; align-items:center; gap:6px; margin-right:14px; font-size:18px;">
+       <span style="display:inline-block; width:22px; height:22px; background:${LEAGUE_COLOR[l]||COL.box}; border:2px solid var(--black);"></span>${l}
+     </span>`
+  ).join('');
+
   slides.push(shell(2, TOTAL, `
     <h2>5 CLUBS RUN THE WORLD</h2>
-    <p>Top 10 clubs by players sent to WC 2026:</p>
-    <div style="margin-top:30px;">
-      ${TC.slice(0,10).map(([c,v]) => bar(c, v, 22, CLUB_COLOR[c] || COL.box)).join('')}
+    <p>Top 10 clubs by players sent to WC 2026 — colored by their league:</p>
+    <div style="margin: 14px 0 20px;">${legend}</div>
+    <div>
+      ${TC.slice(0,10).map(([c,v]) => bar(c, v, 22, LEAGUE_COLOR[leagueOf(c)] || COL.box)).join('')}
     </div>
-    <p class="tiny" style="margin-top:20px;">Top 10 clubs supply <b>${TC.slice(0,10).reduce((s,e)=>s+e[1],0)}</b> of ${totalP} players. <b style="color:#0033A0;">Al Hilal</b> is the only non-European club in the top 10.</p>
+    <p class="tiny" style="margin-top:20px;">Top 10 clubs supply <b>${TC.slice(0,10).reduce((s,e)=>s+e[1],0)}</b> of ${totalP} players. <b style="color:#FFA500; background:#000; padding:2px 6px;">Al Hilal</b> is the only non-European club in the top 10.</p>
   `));
 
   // 3 TOP 5 LEAGUES + BIG-5 STAT
