@@ -143,18 +143,34 @@ function render(){
     <div class="swipe">SWIPE →</div>
   `));
 
-  // 2 TOP 5 CLUBS
+  // 2 TOP 5 CLUBS — proper club colors so each bar reads as its own club
+  const CLUB_COLOR = {
+    'Manchester City'    : '#6CABDD',  // sky blue
+    'Bayern Munich'      : '#DC052D',  // red
+    'Paris Saint-Germain': '#004170',  // navy
+    'Arsenal'            : '#EF0107',  // gunner red
+    'Barcelona'          : '#A50044',  // maroon
+    'Atlético Madrid'    : '#CE3524',  // red
+    'Borussia Dortmund'  : '#000000',  // black (yellow on yellow bg = invisible)
+    'Liverpool'          : '#C8102E',  // red
+    'Manchester United'  : '#DA291C',  // red
+    'Al Hilal'           : '#0033A0',  // royal blue — the outlier
+    'Galatasaray'        : '#FFA500',  // orange-yellow
+    'Real Madrid'        : '#00529F',  // royal blue
+    'AC Milan'           : '#FB090B',  // rosso milan
+    'Slavia Prague'      : '#8B0000',  // dark red
+    'Aston Villa'        : '#670E36',  // claret
+    'Chelsea'            : '#034694',  // royal blue
+    'Crystal Palace'     : '#1B458F',  // blue
+    'Al Nassr'           : '#FFCB02',  // gold
+  };
   slides.push(shell(2, TOTAL, `
     <h2>5 CLUBS RUN THE WORLD</h2>
-    <p>Top clubs by players sent to WC 2026:</p>
+    <p>Top 10 clubs by players sent to WC 2026:</p>
     <div style="margin-top:30px;">
-      ${TC.slice(0,10).map(([c,v]) => bar(c, v, 22,
-         ['Manchester City','Arsenal','Liverpool','Manchester United','Crystal Palace','Aston Villa','Chelsea'].includes(c) ? COL.teamA :
-         c==='Barcelona' ? '#A50044' : c==='Bayern Munich' ? '#DC052D' : c==='Paris Saint-Germain' ? '#004170' :
-         COL.box
-      )).join('')}
+      ${TC.slice(0,10).map(([c,v]) => bar(c, v, 22, CLUB_COLOR[c] || COL.box)).join('')}
     </div>
-    <p class="tiny" style="margin-top:20px;">Top 10 clubs supply <b>${TC.slice(0,10).reduce((s,e)=>s+e[1],0)}</b> of ${totalP} players (${(TC.slice(0,10).reduce((s,e)=>s+e[1],0)/totalP*100).toFixed(1)}%).</p>
+    <p class="tiny" style="margin-top:20px;">Top 10 clubs supply <b>${TC.slice(0,10).reduce((s,e)=>s+e[1],0)}</b> of ${totalP} players. <b style="color:#0033A0;">Al Hilal</b> is the only non-European club in the top 10.</p>
   `));
 
   // 3 TOP 5 LEAGUES + BIG-5 STAT
@@ -223,7 +239,7 @@ function render(){
     </div>
   `));
 
-  // 7 WHERE EXPORTERS PLAY
+  // 7 THE TALENT PIPELINES
   const exporters = [
     ['Morocco',     D.nation_breakdown['Morocco']],
     ['Senegal',     D.nation_breakdown['Senegal']],
@@ -232,20 +248,24 @@ function render(){
     ['Algeria',     D.nation_breakdown['Algeria']],
   ];
   slides.push(shell(7, TOTAL, `
-    <h2>WHERE EXPORTERS PLAY</h2>
-    <p>Top 3 leagues each "exporter" nation sends its players to:</p>
-    <table class="t" style="margin-top:30px; font-size:22px;">
-      <thead><tr><th>NATION</th><th>1ST</th><th>2ND</th><th>3RD</th></tr></thead>
+    <h2>THE TALENT PIPELINES</h2>
+    <p style="font-size:24px;">Some nations don't keep their own players. They <b>send them abroad</b> — and the leagues that buy follow historical patterns.</p>
+    <p class="tiny" style="margin-top:10px; font-size:18px;">For each nation: the top 3 foreign leagues their WC 2026 squad plays in.</p>
+    <table class="t" style="margin-top:24px; font-size:22px;">
+      <thead><tr><th>NATION</th><th>MOST PLAYERS PLAY IN…</th><th>2ND</th><th>3RD</th></tr></thead>
       <tbody>
         ${exporters.map(([n,bd]) => {
           const arr = Object.entries(bd||{}).filter(([k])=>k!=='Unmapped').slice(0,3);
           return `<tr><td><b>${n}</b></td>${[0,1,2].map(i => {
-            const a = arr[i]; return `<td>${a? a[0]+' ('+a[1]+')' : '—'}</td>`;
+            const a = arr[i]; return `<td>${a? '🇽 '+a[0]+' ('+a[1]+')' : '—'}</td>`;
           }).join('')}</tr>`;
         }).join('')}
       </tbody>
     </table>
-    <p class="tiny" style="margin-top:24px;"><b>Morocco's pipeline still flows through Ligue 1. Senegal's ends in the Premier League.</b></p>
+    <div class="box" style="margin-top:24px;">
+      <p style="font-size:24px; margin:0;"><b>Morocco's pipeline still flows through Ligue 1 (colonial-era tie).<br>Senegal's now ends in the Premier League.<br>Croatia's runs through Serie A.</b></p>
+    </div>
+    <p class="tiny" style="margin-top:14px; font-size:16px;">A pipeline = the foreign league that absorbs the most of a nation's talent. It's a map of football's labour market.</p>
   `));
 
   // 8 METHODOLOGY / THE LOAN INFLATION
