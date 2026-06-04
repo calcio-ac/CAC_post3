@@ -48,6 +48,18 @@
   .methodology { background: #fff8e0; border: 2px solid var(--black); padding: 12px; margin-top: 12px; font-size: 11px; line-height:1.5; }
   .methodology b { font-size:12px; }
 
+  /* Click-to-drill details panel */
+  #detailPanel { background: var(--box); border: 3px solid var(--black); margin-top: 18px; padding: 14px; display: none; }
+  #detailPanel.open { display: block; }
+  #detailPanel header { display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; background:transparent; border:0; padding:0; }
+  #detailPanel h2 { margin:0; font-size: 16px; letter-spacing: 1px; }
+  #detailPanel .close { background: var(--black); color: var(--bg); border: none; padding: 4px 10px; cursor: pointer; font-family: inherit; font-size: 11px; }
+  #detailPanel .scroll { max-height: 320px; overflow-y: auto; background: var(--white); border: 2px solid var(--black); }
+  #detailPanel table { font-size: 12px; }
+  #detailPanel th { position: sticky; top: 0; }
+  #detailPanel .hint { font-size: 11px; opacity: .85; margin: 0 0 8px; }
+  .click-hint { font-size:10px; color:var(--teamA); margin: 4px 0 0; font-weight: bold; }
+
   footer { font-size: 11px; text-align:center; margin: 24px 0 8px; }
   footer a { color: var(--black); }
   @media (max-width: 720px){
@@ -72,6 +84,21 @@
 
   <div class="grid" id="kpis"></div>
 
+  <!-- Click-to-drill detail panel -->
+  <div id="detailPanel">
+    <header>
+      <h2 id="detailTitle">&gt; PLAYERS</h2>
+      <button class="close" onclick="closeDetail()">CLOSE ✕</button>
+    </header>
+    <p class="hint" id="detailHint"></p>
+    <div class="scroll">
+      <table id="detailTbl">
+        <thead><tr><th>PLAYER</th><th>NATIONAL TEAM</th><th>POS</th><th>CLUB</th><th>LEAGUE</th></tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </div>
+
   <div class="panel">
     <h2>&gt; TOP CLUBS // BY PLAYERS SENT TO WC 2026</h2>
     <div class="controls">
@@ -86,16 +113,19 @@
       </select>
     </div>
     <div id="chart-clubs" style="width:100%; height:520px;"></div>
+    <p class="click-hint">↑ CLICK ANY BAR TO SEE THE PLAYERS</p>
   </div>
 
   <div class="two-col">
     <div class="panel">
       <h2>&gt; TOP LEAGUES // BY PLAYERS SUPPLIED</h2>
       <div id="chart-leagues" style="width:100%; height:400px;"></div>
+      <p class="click-hint">↑ CLICK A LEAGUE BAR TO SEE THE PLAYERS</p>
     </div>
     <div class="panel">
       <h2>&gt; BY CONTINENT // OF CLUB</h2>
       <div id="chart-continents" style="width:100%; height:400px;"></div>
+      <p class="click-hint">↑ CLICK A CONTINENT SLICE TO SEE THE PLAYERS</p>
     </div>
   </div>
 
@@ -104,8 +134,10 @@
     <div class="controls">
       <label>NATIONAL TEAM</label>
       <select id="natSel"></select>
+      <button class="close" style="background:var(--black); color:var(--bg); border:2px solid var(--black); padding:4px 10px; cursor:pointer; font-family:inherit; font-size:11px;" onclick="showPlayersByCountry()">SHOW ALL PLAYERS</button>
     </div>
     <div id="chart-nat" style="width:100%; height:380px;"></div>
+    <p class="click-hint">↑ CLICK A LEAGUE BAR TO SEE THIS NATION'S PLAYERS THERE</p>
     <p class="small" id="natCaption" style="margin-top:8px;"></p>
   </div>
 
@@ -113,6 +145,7 @@
     <h2>&gt; HOME vs ABROAD // % OF SQUAD PLAYING IN OWN DOMESTIC LEAGUE</h2>
     <p class="small">Sorted by % of the national team that plays its club football inside its own country.</p>
     <div id="chart-home" style="width:100%; height:600px;"></div>
+    <p class="click-hint">↑ CLICK ANY BAR TO SEE THAT NATION'S FULL SQUAD</p>
   </div>
 
   <div class="panel">
@@ -189,6 +222,42 @@ function bindUI(){
 
 function renderAll(){ renderClubs(); renderLeagues(); renderContinents(); renderNation(); renderHome(); renderClub(); }
 
+// ============== CLICK-TO-DRILL ==============
+function showPlayers(rows, title, hint){
+  const tb = document.querySelector('#detailTbl tbody');
+  document.getElementById('detailTitle').innerHTML = '&gt; ' + title;
+  document.getElementById('detailHint').textContent = hint || '';
+  tb.innerHTML = rows.length
+    ? rows.map(r => `<tr><td><b>${r.Player}</b></td><td>${r.Country}</td><td>${r.Position||''}</td><td>${r.Club}</td><td>${r.ClubCountry||'—'}</td></tr>`).join('')
+    : `<tr><td colspan="5">— no players —</td></tr>`;
+  const panel = document.getElementById('detailPanel');
+  panel.classList.add('open');
+  panel.scrollIntoView({behavior:'smooth', block:'start'});
+}
+function closeDetail(){ document.getElementById('detailPanel').classList.remove('open'); }
+function showPlayersByClub(club){
+  const rows = D.players.filter(p => p.Club === club);
+  showPlayers(rows, `${rows.length} PLAYERS AT ${club.toUpperCase()}`, `Players at ${club} going to WC 2026.`);
+}
+function showPlayersByLeague(league){
+  const rows = D.players.filter(p => p.ClubCountry === league);
+  showPlayers(rows, `${rows.length} PLAYERS PLAYING IN ${league.toUpperCase()}`, `WC 2026 players whose clubs are based in ${league}.`);
+}
+function showPlayersByContinent(cont){
+  const rows = D.players.filter(p => p.Continent === cont);
+  showPlayers(rows, `${rows.length} PLAYERS — CLUBS IN ${cont.toUpperCase()}`, `WC 2026 players whose clubs are based in ${cont}.`);
+}
+function showPlayersByCountry(){
+  const nat = document.getElementById('natSel').value;
+  const rows = D.players.filter(p => p.Country === nat);
+  showPlayers(rows, `${rows.length} PLAYERS — ${nat.toUpperCase()} SQUAD`, `Full WC 2026 squad for ${nat}.`);
+}
+function showPlayersByNatLeague(nat, league){
+  const rows = D.players.filter(p => p.Country === nat && p.ClubCountry === league);
+  showPlayers(rows, `${rows.length} ${nat.toUpperCase()} PLAYERS PLAYING IN ${league.toUpperCase()}`,
+    `${nat} WC 2026 squad members based in ${league}.`);
+}
+
 function clubContinent(club){
   for (const p of D.players) if (p.Club === club) return p.Continent || 'Unmapped';
   return 'Unmapped';
@@ -201,12 +270,13 @@ function renderClubs(){
   if (cont !== 'ALL') entries = entries.filter(([c]) => clubContinent(c) === cont);
   entries = entries.slice(0, n).reverse();
   const colors = entries.map(([c]) => CONT_COLOR[clubContinent(c)] || COL.black);
-  Plotly.newPlot('chart-clubs', [{
+  const el = document.getElementById('chart-clubs');
+  Plotly.newPlot(el, [{
     type:'bar', orientation:'h',
     x: entries.map(e=>e[1]), y: entries.map(e=>e[0]),
     marker:{ color: colors, line:{ color: COL.black, width:1.5 } },
     text: entries.map(e=>e[1]), textposition:'outside',
-    hovertemplate:'<b>%{y}</b><br>Players: %{x}<extra></extra>'
+    hovertemplate:'<b>%{y}</b><br>Players: %{x}<br><i>click to see players</i><extra></extra>'
   }], {
     paper_bgcolor: COL.white, plot_bgcolor: COL.white,
     font:{ family: FONT, color: COL.black, size: 12 },
@@ -214,55 +284,62 @@ function renderClubs(){
     xaxis:{ title:'PLAYERS AT WC 2026', gridcolor:'#eee' },
     yaxis:{ automargin:true }
   }, {displayModeBar:false, responsive:true});
+  el.on('plotly_click', e => showPlayersByClub(e.points[0].y));
 }
 
 function renderLeagues(){
   const entries = Object.entries(D.top_leagues).filter(([k])=>k!=='Unmapped').slice(0,15).reverse();
-  Plotly.newPlot('chart-leagues', [{
+  const el = document.getElementById('chart-leagues');
+  Plotly.newPlot(el, [{
     type:'bar', orientation:'h',
     x: entries.map(e=>e[1]), y: entries.map(e=>e[0]),
     marker:{ color: entries.map(([c,v]) => ['England','Spain','Italy','Germany','France'].includes(c) ? COL.teamA : COL.box),
              line:{ color: COL.black, width:1.5 } },
     text: entries.map(e=>e[1]), textposition:'outside',
-    hovertemplate:'<b>%{y}</b><br>Players: %{x}<extra></extra>'
+    hovertemplate:'<b>%{y}</b><br>Players: %{x}<br><i>click to see players</i><extra></extra>'
   }], {
     paper_bgcolor: COL.white, plot_bgcolor: COL.white,
     font:{ family: FONT, color: COL.black, size: 12 },
     margin:{ l:120, r:40, t:10, b:40 },
     xaxis:{ gridcolor:'#eee' }, yaxis:{ automargin:true }
   }, {displayModeBar:false, responsive:true});
+  el.on('plotly_click', e => showPlayersByLeague(e.points[0].y));
 }
 
 function renderContinents(){
   const entries = ORDER_CONT.map(c => [c, D.by_continent[c] || 0]);
-  Plotly.newPlot('chart-continents', [{
+  const el = document.getElementById('chart-continents');
+  Plotly.newPlot(el, [{
     type:'pie', labels: entries.map(e=>e[0]), values: entries.map(e=>e[1]),
     marker:{ colors: entries.map(e=>CONT_COLOR[e[0]]), line:{ color: COL.black, width:2 } },
     textinfo:'label+percent', textfont:{ family: FONT, color: COL.black, size: 13 },
-    hovertemplate:'<b>%{label}</b><br>%{value} players<br>%{percent}<extra></extra>'
+    hovertemplate:'<b>%{label}</b><br>%{value} players<br>%{percent}<br><i>click to see players</i><extra></extra>'
   }], {
     paper_bgcolor: COL.white, plot_bgcolor: COL.white,
     font:{ family: FONT, color: COL.black },
     margin:{ l:10, r:10, t:10, b:10 }, showlegend:false
   }, {displayModeBar:false, responsive:true});
+  el.on('plotly_click', e => showPlayersByContinent(e.points[0].label));
 }
 
 function renderNation(){
   const nat = document.getElementById('natSel').value;
   const b = D.nation_breakdown[nat];
   const entries = Object.entries(b).sort((a,b)=>b[1]-a[1]);
-  Plotly.newPlot('chart-nat', [{
+  const el = document.getElementById('chart-nat');
+  Plotly.newPlot(el, [{
     type:'bar', orientation:'h',
     x: entries.map(e=>e[1]).reverse(), y: entries.map(e=>e[0]).reverse(),
     marker:{ color: COL.teamA, line:{ color: COL.black, width:1.5 } },
     text: entries.map(e=>e[1]).reverse(), textposition:'outside',
-    hovertemplate:'<b>%{y}</b><br>%{x} players<extra></extra>'
+    hovertemplate:'<b>%{y}</b><br>%{x} players<br><i>click to see players</i><extra></extra>'
   }], {
     paper_bgcolor: COL.white, plot_bgcolor: COL.white,
     font:{ family: FONT, color: COL.black, size: 12 },
     margin:{ l:130, r:40, t:10, b:30 },
     xaxis:{ gridcolor:'#eee' }, yaxis:{ automargin:true }
   }, {displayModeBar:false, responsive:true});
+  el.on('plotly_click', e => showPlayersByNatLeague(nat, e.points[0].y));
   const home = D.home_pct[nat];
   const total = entries.reduce((s,e)=>s+e[1], 0);
   document.getElementById('natCaption').innerHTML =
@@ -271,19 +348,25 @@ function renderNation(){
 
 function renderHome(){
   const entries = Object.entries(D.home_pct).sort((a,b)=>b[1]-a[1]);
-  Plotly.newPlot('chart-home', [{
+  const el = document.getElementById('chart-home');
+  Plotly.newPlot(el, [{
     type:'bar', orientation:'h',
     x: entries.map(e=>e[1]).reverse(), y: entries.map(e=>e[0]).reverse(),
     marker:{ color: entries.map(e => e[1] >= 50 ? COL.teamA : e[1] >= 20 ? COL.box : COL.teamB).reverse(),
              line:{ color: COL.black, width:1 } },
     text: entries.map(e=>e[1].toFixed(0)+'%').reverse(), textposition:'outside',
-    hovertemplate:'<b>%{y}</b><br>%{x:.1f}% home-based<extra></extra>'
+    hovertemplate:'<b>%{y}</b><br>%{x:.1f}% home-based<br><i>click to see squad</i><extra></extra>'
   }], {
     paper_bgcolor: COL.white, plot_bgcolor: COL.white,
     font:{ family: FONT, color: COL.black, size: 11 },
     margin:{ l:140, r:60, t:10, b:30 },
     xaxis:{ ticksuffix:'%', gridcolor:'#eee' }, yaxis:{ automargin:true }
   }, {displayModeBar:false, responsive:true});
+  el.on('plotly_click', e => {
+    const nat = e.points[0].y;
+    const rows = D.players.filter(p => p.Country === nat);
+    showPlayers(rows, `${rows.length} PLAYERS — ${nat.toUpperCase()} SQUAD`, `Full WC 2026 squad for ${nat}.`);
+  });
 }
 
 function renderClub(){
@@ -292,8 +375,14 @@ function renderClub(){
   const entries = Object.entries(b).sort((a,b)=>b[1]-a[1]);
   const tb = document.querySelector('#clubTbl tbody');
   tb.innerHTML = entries.length
-    ? entries.map(e => `<tr><td><b>${e[0]}</b></td><td class="r">${e[1]}</td></tr>`).join('')
+    ? entries.map(e => `<tr style="cursor:pointer" onclick="showPlayersByClubNat('${cl.replace(/'/g,"\\'")}','${e[0].replace(/'/g,"\\'")}')"><td><b>${e[0]}</b></td><td class="r">${e[1]}</td></tr>`).join('')
+        + `<tr style="cursor:pointer; background:var(--box)" onclick="showPlayersByClub('${cl.replace(/'/g,"\\'")}')"><td><b>↳ SHOW ALL ${cl.toUpperCase()} PLAYERS</b></td><td class="r">${entries.reduce((s,e)=>s+e[1],0)}</td></tr>`
     : `<tr><td colspan="2">— no data —</td></tr>`;
+}
+function showPlayersByClubNat(club, nat){
+  const rows = D.players.filter(p => p.Club === club && p.Country === nat);
+  showPlayers(rows, `${rows.length} ${nat.toUpperCase()} PLAYERS AT ${club.toUpperCase()}`,
+    `${nat} WC 2026 squad members at ${club}.`);
 }
 
 load();
