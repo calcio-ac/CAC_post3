@@ -1,10 +1,10 @@
 {
   "meta": {
-    "total_players": 1245,
+    "total_players": 1246,
     "total_nations": 48,
-    "total_clubs": 490,
-    "mapped_pct": 96.9,
-    "unmapped_n": 68
+    "total_clubs": 484,
+    "mapped_pct": 96.8,
+    "unmapped_n": 40
   },
   "players": [
     {
@@ -651,9 +651,9 @@
       "Country": "South Korea",
       "Position": "DF",
       "Player": "Kim Moon-Hwan",
-      "Club": "Daejeon Hana",
-      "ClubCountry": "South Korea",
-      "Continent": "Asia",
+      "Club": "Daejeon Hana Citizen",
+      "ClubCountry": "",
+      "Continent": "",
       "NatLeague": "South Korea",
       "IsHome": false
     },
@@ -971,7 +971,7 @@
       "Country": "Czechia",
       "Position": "MF",
       "Player": "Tom\u00e1\u0161 Sou\u010dek",
-      "Club": "West Ham",
+      "Club": "West Ham United",
       "ClubCountry": "England",
       "Continent": "Europe",
       "NatLeague": "Czechia",
@@ -3691,7 +3691,7 @@
       "Country": "Paraguay",
       "Position": "DF",
       "Player": "J\u00fanior Alonso",
-      "Club": "Atletico Mineiro",
+      "Club": "Atl\u00e9tico Mineiro",
       "ClubCountry": "Brazil",
       "Continent": "South America",
       "NatLeague": "Paraguay",
@@ -3931,7 +3931,7 @@
       "Country": "T\u00fcrkiye",
       "Position": "GK",
       "Player": "Altay Bayindir",
-      "Club": "Man United",
+      "Club": "Manchester United",
       "ClubCountry": "England",
       "Continent": "Europe",
       "NatLeague": "Turkey",
@@ -4025,7 +4025,7 @@
       "ClubCountry": "Turkey",
       "Continent": "Europe",
       "NatLeague": "Turkey",
-      "IsHome": false
+      "IsHome": true
     },
     {
       "Country": "T\u00fcrkiye",
@@ -4941,7 +4941,7 @@
       "Country": "Ecuador",
       "Position": "GK",
       "Player": "Hern\u00e1n Gal\u00edndez",
-      "Club": "Huracan",
+      "Club": "Hurac\u00e1n",
       "ClubCountry": "Argentina",
       "Continent": "South America",
       "NatLeague": "Ecuador",
@@ -5041,7 +5041,7 @@
       "Country": "Ecuador",
       "Position": "DF",
       "Player": "Jackson Porozo",
-      "Club": "Club Tijuana",
+      "Club": "Tijuana",
       "ClubCountry": "Mexico",
       "Continent": "North America",
       "NatLeague": "Ecuador",
@@ -5441,7 +5441,7 @@
       "Country": "Netherlands",
       "Position": "FW",
       "Player": "Crysencio Summerville",
-      "Club": "West Ham",
+      "Club": "West Ham United",
       "ClubCountry": "England",
       "Continent": "Europe",
       "NatLeague": "Netherlands",
@@ -7151,9 +7151,9 @@
       "Country": "New Zealand",
       "Position": "MF",
       "Player": "Matt Garbett",
-      "Club": "Peterborough United",
-      "ClubCountry": "England",
-      "Continent": "Europe",
+      "Club": "England",
+      "ClubCountry": "",
+      "Continent": "",
       "NatLeague": "New Zealand",
       "IsHome": false
     },
@@ -8259,7 +8259,7 @@
     },
     {
       "Country": "Saudi Arabia",
-      "Position": "MF",
+      "Position": "FW",
       "Player": "Salem Al Dawsari",
       "Club": "Al Hilal",
       "ClubCountry": "Saudi Arabia",
@@ -10945,7 +10945,7 @@
       "ClubCountry": "Uzbekistan",
       "Continent": "Asia",
       "NatLeague": "Uzbekistan",
-      "IsHome": false
+      "IsHome": true
     },
     {
       "Country": "Uzbekistan",
@@ -11025,7 +11025,7 @@
       "ClubCountry": "Uzbekistan",
       "Continent": "Asia",
       "NatLeague": "Uzbekistan",
-      "IsHome": false
+      "IsHome": true
     },
     {
       "Country": "Uzbekistan",
@@ -11771,7 +11771,7 @@
       "Country": "Croatia",
       "Position": "DF",
       "Player": "Luka Vuskovic",
-      "Club": "Hamburg",
+      "Club": "Hamburger SV",
       "ClubCountry": "Germany",
       "Continent": "Europe",
       "NatLeague": "Croatia",
@@ -11945,7 +11945,7 @@
       "ClubCountry": "Ghana",
       "Continent": "Africa",
       "NatLeague": "Ghana",
-      "IsHome": false
+      "IsHome": true
     },
     {
       "Country": "Ghana",
@@ -12456,6 +12456,16 @@
       "Continent": "North America",
       "NatLeague": "Panama",
       "IsHome": false
+    },
+    {
+      "Country": "Saudi Arabia",
+      "Position": "FW",
+      "Player": "Sultan Mandash",
+      "Club": "Al Hilal",
+      "ClubCountry": "Saudi Arabia",
+      "Continent": "Asia",
+      "NatLeague": "Saudi Arabia",
+      "IsHome": true
     }
   ],
   "top_clubs": {
@@ -12465,10 +12475,10 @@
     "Arsenal": 16,
     "Barcelona": 14,
     "Atl\u00e9tico Madrid": 12,
+    "Manchester United": 12,
+    "Al Hilal": 12,
     "Borussia Dortmund": 11,
     "Liverpool": 11,
-    "Manchester United": 11,
-    "Al Hilal": 11,
     "Crystal Palace": 11,
     "Galatasaray": 11,
     "AC Milan": 10,
@@ -12533,6 +12543,7 @@
     "Borussia M\u00f6nchengladbach": 4,
     "Feyenoord": 4,
     "LAFC": 4,
+    "West Ham United": 4,
     "Norwich City": 4,
     "Sassuolo": 4,
     "Lens": 4,
@@ -12546,6 +12557,7 @@
     "Bournemouth": 4,
     "Genk": 4,
     "Everton": 4,
+    "Atl\u00e9tico Mineiro": 4,
     "AJ Auxerre": 4,
     "Ajax": 4,
     "Zamalek": 4,
@@ -12571,6 +12583,7 @@
     "Al Arabi": 3,
     "Al Gharafa": 3,
     "Lorient": 3,
+    "Hamburger SV": 3,
     "Sevilla": 3,
     "Rennes": 3,
     "Al Ain": 3,
@@ -12586,7 +12599,6 @@
     "Hoffenheim": 3,
     "PEC Zwolle": 3,
     "Charleroi": 3,
-    "Atl\u00e9tico Mineiro": 3,
     "Werder Bremen": 3,
     "VfL Wolfsburg": 3,
     "Real Oviedo": 3,
@@ -12599,6 +12611,7 @@
     "AEL Limassol": 2,
     "Toluca": 2,
     "Genoa": 2,
+    "Tijuana": 2,
     "Fenerbah\u00e7e": 2,
     "Anderlecht": 2,
     "Dynamo Moscow": 2,
@@ -12612,13 +12625,11 @@
     "Red Star Belgrade": 2,
     "Stoke City": 2,
     "Besiktas": 2,
-    "West Ham": 2,
     "Middlesbrough": 2,
     "Southampton": 2,
     "Schalke 04": 2,
     "Br\u00f8ndby": 2,
     "RB Salzburg": 2,
-    "Hamburger SV": 2,
     "Zenit": 2,
     "Girona": 2,
     "Olympiacos": 2,
@@ -12648,6 +12659,7 @@
     "Panathinaikos": 2,
     "Be\u015fikta\u015f": 2,
     "Trabzonspor": 2,
+    "Hurac\u00e1n": 2,
     "Internacional": 2,
     "Venezia": 2,
     "Pumas UNAM": 2,
@@ -12669,7 +12681,6 @@
     "San Diego FC": 2,
     "Al Bataeh": 2,
     "Krasnodar": 2,
-    "West Ham United": 2,
     "Rayo Vallecano": 2,
     "Al Talaba": 2,
     "Port FC": 2,
@@ -12690,7 +12701,6 @@
     "Lokomotiv Moscow": 1,
     "PAOK": 1,
     "AZ Alkmaar": 1,
-    "Tijuana": 1,
     "AEK Athens": 1,
     "Pumas": 1,
     "Molde": 1,
@@ -12701,7 +12711,7 @@
     "Zhejiang": 1,
     "Gangwon FC": 1,
     "Austria Vienna": 1,
-    "Daejeon Hana": 1,
+    "Daejeon Hana Citizen": 1,
     "Birmingham City": 1,
     "Wolverhampton": 1,
     "Sigma Olomouc": 1,
@@ -12774,7 +12784,6 @@
     "Machida Zelvia": 1,
     "San Lorenzo": 1,
     "Olimpia": 1,
-    "Atletico Mineiro": 1,
     "Gremio": 1,
     "Lanus": 1,
     "Talleres": 1,
@@ -12782,7 +12791,6 @@
     "Independiente Rivadavia": 1,
     "Red Bull Bragantino": 1,
     "Portsmouth": 1,
-    "Man United": 1,
     "Caykur Rizesport": 1,
     "Kasimpasa": 1,
     "VVV Venlo": 1,
@@ -12801,14 +12809,11 @@
     "Gil Vicente": 1,
     "NK Maribor": 1,
     "Cercle Brugge": 1,
-    "Huracan": 1,
     "AE Kifisias": 1,
-    "Club Tijuana": 1,
     "Independiente del Valle": 1,
     "FC Midtjylland": 1,
     "Antwerp": 1,
     "Pachuca": 1,
-    "Hurac\u00e1n": 1,
     "Corinthians": 1,
     "Sanfrecce Hiroshima": 1,
     "Reims": 1,
@@ -12840,7 +12845,7 @@
     "Lechia Gda\u0144sk": 1,
     "Portland Timbers": 1,
     "Braintree Town": 1,
-    "Peterborough United": 1,
+    "England": 1,
     "Motherwell": 1,
     "Western Sydney Wanderers": 1,
     "Port Vale": 1,
@@ -12928,7 +12933,6 @@
     "Vasco da Gama": 1,
     "Kobenhavn": 1,
     "Fiorentina": 1,
-    "Hamburg": 1,
     "Accra Hearts of Oak SC": 1,
     "St. Gallen": 1,
     "St Patrick's Athletic": 1,
@@ -12951,15 +12955,15 @@
     "Universidad de Concepci\u00f3n": 1
   },
   "top_leagues": {
-    "England": 200,
+    "England": 199,
     "Germany": 104,
     "Spain": 84,
     "France": 80,
     "Italy": 73,
-    "Saudi Arabia": 48,
+    "Saudi Arabia": 49,
     "Turkey": 45,
+    "Unmapped": 40,
     "USA": 39,
-    "Unmapped": 38,
     "Netherlands": 34,
     "Portugal": 32,
     "Brazil": 31,
@@ -12984,11 +12988,11 @@
     "Norway": 8,
     "Croatia": 8,
     "New Zealand": 8,
-    "South Korea": 7,
     "Japan": 7,
     "Austria": 7,
     "Australia": 7,
     "Tunisia": 7,
+    "South Korea": 6,
     "Canada": 6,
     "Sweden": 5,
     "Israel": 4,
@@ -13020,12 +13024,12 @@
     "Slovakia": 1
   },
   "by_continent": {
-    "Europe": 827,
+    "Europe": 826,
     "Asia": 175,
     "North America": 77,
     "South America": 61,
     "Africa": 52,
-    "Unmapped": 38,
+    "Unmapped": 40,
     "Oceania": 15
   },
   "top_club_per_continent": {
@@ -13037,7 +13041,7 @@
       "Barcelona": 14
     },
     "Asia": {
-      "Al Hilal": 11,
+      "Al Hilal": 12,
       "Al Nassr": 10,
       "Al Ahli": 8,
       "Al Duhail": 7,
@@ -13054,7 +13058,7 @@
       "Flamengo": 9,
       "Palmeiras": 7,
       "River Plate": 5,
-      "Atl\u00e9tico Mineiro": 3,
+      "Atl\u00e9tico Mineiro": 4,
       "LDU Quito": 2
     },
     "Africa": {
@@ -13108,11 +13112,11 @@
     "Paraguay": 11.5,
     "Portugal": 18.5,
     "Qatar": 92.3,
-    "Saudi Arabia": 96.2,
+    "Saudi Arabia": 96.3,
     "Scotland": 30.8,
     "Senegal": 0.0,
     "South Africa": 73.1,
-    "South Korea": 23.1,
+    "South Korea": 19.2,
     "Spain": 65.4,
     "Sweden": 11.5,
     "Switzerland": 7.7,
@@ -13146,18 +13150,18 @@
       "Cyprus": 1
     },
     "South Korea": {
-      "South Korea": 6,
+      "South Korea": 5,
       "Germany": 3,
       "England": 3,
       "Japan": 2,
       "Denmark": 2,
+      "Unmapped": 2,
       "UAE": 1,
       "China": 1,
       "Austria": 1,
       "Serbia": 1,
       "Scotland": 1,
       "Netherlands": 1,
-      "Unmapped": 1,
       "France": 1,
       "Turkey": 1,
       "USA": 1
@@ -13424,12 +13428,13 @@
       "Greece": 1
     },
     "New Zealand": {
-      "England": 8,
       "New Zealand": 8,
+      "England": 7,
       "USA": 2,
       "Australia": 2,
       "Poland": 1,
       "Norway": 1,
+      "Unmapped": 1,
       "Netherlands": 1,
       "Scotland": 1,
       "France": 1,
@@ -13470,7 +13475,7 @@
       "Saudi Arabia": 1
     },
     "Saudi Arabia": {
-      "Saudi Arabia": 25,
+      "Saudi Arabia": 26,
       "France": 1
     },
     "France": {
@@ -13730,23 +13735,33 @@
       "Uruguay": 1,
       "Norway": 1
     },
+    "Manchester United": {
+      "Brazil": 2,
+      "Portugal": 2,
+      "England": 2,
+      "Morocco": 1,
+      "T\u00fcrkiye": 1,
+      "Ivory Coast": 1,
+      "Belgium": 1,
+      "Uruguay": 1,
+      "Argentina": 1
+    },
     "Al Hilal": {
-      "Saudi Arabia": 6,
+      "Saudi Arabia": 7,
       "Morocco": 1,
       "Uruguay": 1,
       "France": 1,
       "Senegal": 1,
       "Portugal": 1
     },
-    "Manchester United": {
-      "Brazil": 2,
-      "Portugal": 2,
-      "England": 2,
-      "Morocco": 1,
-      "Ivory Coast": 1,
-      "Belgium": 1,
-      "Uruguay": 1,
-      "Argentina": 1
+    "Borussia Dortmund": {
+      "Germany": 4,
+      "Austria": 2,
+      "Switzerland": 1,
+      "T\u00fcrkiye": 1,
+      "Sweden": 1,
+      "Norway": 1,
+      "Algeria": 1
     },
     "Liverpool": {
       "Netherlands": 3,
@@ -13759,23 +13774,6 @@
       "France": 1,
       "Argentina": 1
     },
-    "Borussia Dortmund": {
-      "Germany": 4,
-      "Austria": 2,
-      "Switzerland": 1,
-      "T\u00fcrkiye": 1,
-      "Sweden": 1,
-      "Norway": 1,
-      "Algeria": 1
-    },
-    "Galatasaray": {
-      "T\u00fcrkiye": 6,
-      "Germany": 1,
-      "Ivory Coast": 1,
-      "Netherlands": 1,
-      "Senegal": 1,
-      "Colombia": 1
-    },
     "Crystal Palace": {
       "France": 2,
       "Colombia": 2,
@@ -13786,6 +13784,27 @@
       "Senegal": 1,
       "Norway": 1,
       "England": 1
+    },
+    "Galatasaray": {
+      "T\u00fcrkiye": 6,
+      "Germany": 1,
+      "Ivory Coast": 1,
+      "Netherlands": 1,
+      "Senegal": 1,
+      "Colombia": 1
+    },
+    "AC Milan": {
+      "Belgium": 2,
+      "France": 2,
+      "Mexico": 1,
+      "Switzerland": 1,
+      "United States": 1,
+      "Ecuador": 1,
+      "Portugal": 1,
+      "Croatia": 1
+    },
+    "Slavia Prague": {
+      "Czechia": 10
     },
     "Real Madrid": {
       "France": 2,
@@ -13798,15 +13817,14 @@
       "Austria": 1,
       "England": 1
     },
-    "AC Milan": {
+    "Aston Villa": {
+      "England": 3,
       "Belgium": 2,
-      "France": 2,
-      "Mexico": 1,
-      "Switzerland": 1,
-      "United States": 1,
-      "Ecuador": 1,
-      "Portugal": 1,
-      "Croatia": 1
+      "Scotland": 1,
+      "Ivory Coast": 1,
+      "Sweden": 1,
+      "France": 1,
+      "Argentina": 1
     },
     "Chelsea": {
       "Senegal": 2,
@@ -13819,22 +13837,22 @@
       "Portugal": 1,
       "England": 1
     },
-    "Slavia Prague": {
-      "Czechia": 10
-    },
     "Al Nassr": {
       "Saudi Arabia": 7,
       "Portugal": 2,
       "Senegal": 1
     },
-    "Aston Villa": {
-      "England": 3,
-      "Belgium": 2,
-      "Scotland": 1,
-      "Ivory Coast": 1,
-      "Sweden": 1,
-      "France": 1,
-      "Argentina": 1
+    "Mamelodi Sundowns": {
+      "South Africa": 9
+    },
+    "PSV Eindhoven": {
+      "Morocco": 2,
+      "United States": 2,
+      "Bosnia-Herzegovina": 1,
+      "Curacao": 1,
+      "Netherlands": 1,
+      "Austria": 1,
+      "Croatia": 1
     },
     "Sunderland": {
       "Netherlands": 2,
@@ -13846,27 +13864,18 @@
       "Senegal": 1,
       "Congo DR": 1
     },
-    "Mamelodi Sundowns": {
-      "South Africa": 9
-    },
-    "Al Ahly": {
-      "Egypt": 8,
-      "Morocco": 1
-    },
-    "PSV Eindhoven": {
-      "Morocco": 2,
-      "United States": 2,
-      "Bosnia-Herzegovina": 1,
-      "Curacao": 1,
-      "Netherlands": 1,
-      "Austria": 1,
-      "Croatia": 1
-    },
     "Flamengo": {
       "Brazil": 4,
       "Uruguay": 3,
       "Ecuador": 1,
       "Colombia": 1
+    },
+    "Al Ahly": {
+      "Egypt": 8,
+      "Morocco": 1
+    },
+    "Orlando Pirates": {
+      "South Africa": 8
     },
     "Celtic": {
       "Scotland": 2,
@@ -13876,24 +13885,6 @@
       "Japan": 1,
       "Sweden": 1,
       "Tunisia": 1
-    },
-    "Tottenham Hotspur": {
-      "Netherlands": 1,
-      "Sweden": 1,
-      "Spain": 1,
-      "Uruguay": 1,
-      "Senegal": 1,
-      "Argentina": 1,
-      "Austria": 1,
-      "England": 1
-    },
-    "Brighton": {
-      "Netherlands": 3,
-      "Paraguay": 1,
-      "T\u00fcrkiye": 1,
-      "Germany": 1,
-      "Sweden": 1,
-      "Belgium": 1
     },
     "Viktoria Plzen": {
       "Czechia": 4,
@@ -13911,19 +13902,31 @@
       "Portugal": 1,
       "Ghana": 1
     },
-    "Sporting CP": {
-      "Portugal": 3,
-      "Uruguay": 2,
-      "Ivory Coast": 1,
+    "Benfica": {
+      "Norway": 2,
+      "Bosnia-Herzegovina": 1,
       "Belgium": 1,
+      "Cape Verde": 1,
+      "Argentina": 1,
+      "Portugal": 1,
       "Colombia": 1
     },
-    "Newcastle United": {
-      "England": 3,
-      "Germany": 2,
-      "Brazil": 1,
-      "Sweden": 1,
-      "Congo DR": 1
+    "Stuttgart": {
+      "Germany": 4,
+      "Bosnia-Herzegovina": 1,
+      "Switzerland": 1,
+      "Morocco": 1,
+      "Ecuador": 1
+    },
+    "Eintracht Frankfurt": {
+      "Switzerland": 1,
+      "Morocco": 1,
+      "T\u00fcrkiye": 1,
+      "Germany": 1,
+      "Japan": 1,
+      "Tunisia": 1,
+      "Belgium": 1,
+      "Algeria": 1
     }
   }
 }
